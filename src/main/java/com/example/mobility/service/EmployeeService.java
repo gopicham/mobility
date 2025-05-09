@@ -45,6 +45,7 @@ public class EmployeeService {
 		return employeeRepository.findById(id);
 	}
 
+	@CachePut(value = "employeeCache", key = "#result.id")
 	public Employee createEmployee(Employee employee) {
 		return employeeRepository.save(employee);
 	}
@@ -61,9 +62,9 @@ public class EmployeeService {
 	}
 
 	@CacheEvict(value = "employeeCache", key = "#id")
-	public Map<String, Boolean> deleteEmployee(Long employeeId) throws ResourceNotFoundException {
-		Employee employee = employeeRepository.findById(employeeId)
-				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
+	public Map<String, Boolean> deleteEmployee(Long id) throws ResourceNotFoundException {
+		Employee employee = employeeRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + id));
 
 		employeeRepository.delete(employee);
 		Map<String, Boolean> response = new HashMap<>();
@@ -118,6 +119,12 @@ public class EmployeeService {
 		query.setFirstResult(firstResult);
 		query.setMaxResults(pageSize);
 		return query.getResultList();
+	}
+
+	public void updateBuilkEmployees(List<Employee> employeeDetails) {
+
+		employeeRepository.saveAll(employeeDetails);
+
 	}
 
 }

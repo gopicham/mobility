@@ -26,7 +26,7 @@ public class SpringSecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf().disable().cors().and().authorizeHttpRequests((authorize) -> {
-			authorize.requestMatchers("/api/v1/**", "/actuator/**").permitAll();
+			authorize.requestMatchers("/api/v1/**", "/document/v1/**", "/actuator/**").permitAll();
 			authorize.anyRequest().authenticated();
 		});
 		return http.build();

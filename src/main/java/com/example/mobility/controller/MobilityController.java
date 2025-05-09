@@ -29,6 +29,8 @@ import com.example.mobility.security.AuthService;
 import com.example.mobility.security.JWTAuthResponse;
 import com.example.mobility.security.LoginDto;
 import com.example.mobility.service.EmployeeService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -98,6 +100,17 @@ public class MobilityController {
 			@RequestBody Employee employeeDetails, HttpServletResponse response) throws ResourceNotFoundException {
 		Employee updatedEmployee = employeeService.updateEmail(employeeId, employeeDetails);
 		return ResponseEntity.ok(updatedEmployee);
+	}
+
+	@PutMapping("/employees/bulk")
+	public ResponseEntity<String> updateBuilkEmployees(@RequestBody Map<String, Object> employees)
+			throws ResourceNotFoundException {
+		ObjectMapper mapper = new ObjectMapper();
+		Object data = employees.get("employees");
+		List<Employee> employeeList = mapper.convertValue(data, new TypeReference<List<Employee>>() {
+		});
+		employeeService.updateBuilkEmployees(employeeList);
+		return ResponseEntity.ok("updated");
 	}
 
 	@DeleteMapping("/employees/{id}")

@@ -28,19 +28,19 @@ public class SpringClientController {
 		SpringClientController springRestClient = new SpringClientController();
 
 		// Step1: first create a new employee
-		//springRestClient.createEmployee();
+		// springRestClient.createEmployee();
 
 		// Step 2: get new created employee from step1
 		springRestClient.getEmployeeById("0");
 
 		// Step3: get all employees
-		//springRestClient.getEmployees();
+		// springRestClient.getEmployees();
 
 		// Step4: Update employee with id = 1
 		springRestClient.updateEmployee();
 
 		// Step5: Delete employee with id = 1
-		//springRestClient.deleteEmployee();
+		// springRestClient.deleteEmployee();
 	}
 
 	private void getEmployees() {
@@ -54,6 +54,7 @@ public class SpringClientController {
 
 		System.out.println(result);
 	}
+
 	@CircuitBreaker(name = "exampleCircuitBreaker", fallbackMethod = "getEmployeeByIdFallback")
 	private void getEmployeeById(String empId) {
 
@@ -68,7 +69,7 @@ public class SpringClientController {
 
 	private void createEmployee() {
 
-		Employee newEmployee = new Employee("admin", "admin", "admin@gmail.com");
+		Employee newEmployee = new Employee("user", "system123", "manjutha7645785@gmail.com", null, null);
 
 		RestTemplate restTemplate = new RestTemplate();
 		Employee result = restTemplate.postForObject(CREATE_EMPLOYEE_ENDPOINT_URL, newEmployee, Employee.class);
@@ -79,7 +80,7 @@ public class SpringClientController {
 	private void updateEmployee() {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("id", "3");
-		Employee updatedEmployee = new Employee("user", "system123", "manjutha7645785@gmail.com");
+		Employee updatedEmployee = new Employee("user", "system123", "manjutha7645785@gmail.com", null, null);
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.put(UPDATE_EMPLOYEE_ENDPOINT_URL, updatedEmployee, params);
 	}
@@ -90,11 +91,10 @@ public class SpringClientController {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.delete(DELETE_EMPLOYEE_ENDPOINT_URL, params);
 	}
-	
 
-	  // Fallback method for Circuit Breaker
-  public String getEmployeeByIdFallback(String empId,Throwable throwable) {
-      return "Fallback response due to: " + throwable.getMessage();
-  }
+	// Fallback method for Circuit Breaker
+	public String getEmployeeByIdFallback(String empId, Throwable throwable) {
+		return "Fallback response due to: " + throwable.getMessage();
+	}
 
 }
